@@ -152,4 +152,105 @@ public class PacienteDaoH2 implements IDaoPaciente<Paciente> {
         }
         return pacientes;
     }
+
+    @Override
+    public void actualizar(Paciente paciente) {
+        Connection connection = null;
+        try {
+            connection = H2Connection.getConnection();
+            connection.setAutoCommit(false);
+
+            // Primero actualizamos el domicilio del paciente si es necesario
+            Domicilio domicilioPaciente = paciente.getDomicilio();
+            if (domicilioPaciente.getId() == null) {
+                // Si el domicilio no tiene ID (es nuevo), lo registramos primero
+                Domicilio domicilioGuardado = new DomicilioDaoH2().registrar(domicilioPaciente);
+                domicilioPaciente.setId(domicilioGuardado.getId());
+            } else {
+                // Si el domicilio ya tiene ID, lo actualizamos si es necesario
+                new DomicilioDaoH2().actualizar(domicilioPaciente);
+            }
+
+            // Luego actualizamos los datos del paciente en la tabla PACIENTES
+            String SQL_UPDATE = "UPDATE PACIENTES SET APELLIDO=?, NOMBRE=?, DNI=?, FECHA_INGRESO=?, DOMICILIO_ID=? WHERE ID=?";
+            PreparedStatement preparedStatement = connection.prepareStatement(SQL_UPDATE);
+            preparedStatement.setString(1, paciente.getApellido());
+            preparedStatement.setString(2, paciente.getNombre());
+            preparedStatement.setString(3, paciente.getDni());
+            preparedStatement.setDate(4, Date.valueOf(paciente.getFechaIngreso()));
+            preparedStatement.setInt(5, paciente.getDomicilio().getId());
+            preparedStatement.setInt(6, paciente.getId());
+            int filasActualizadas = preparedStatement.executeUpdate();
+
+            if (filasActualizadas == 1) {
+                LOGGER.info("Paciente actualizado: " + paciente);
+            } else {
+                LOGGER.error("No se pudo actualizar el paciente con ID: " + paciente.getId());
+            }
+
+            connection.commit();
+            connection.setAutoCommit(true);
+        } catch (Exception e) {
+            if (connection != null) {
+                try {
+                    connection.rollback();
+                } catch (SQLException ex) {
+                    LOGGER.error("Error al hacer rollback: " + ex.getMessage());
+                }
+            }
+            LOGGER.error("Error al actualizar paciente: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                LOGGER.error("Error al cerrar la conexión: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public void eliminar(Integer id) {
+        Connection connection = null;
+        try {
+            connection = H2Connection.getConnection();
+            connection.setAutoCommit(false);
+
+            String SQL_DELETE = "DELETE FROM PACIENTES WHERE ID=?";
+            PreparedStatement preparedStatement = connection.prepareStatement(SQL_DELETE);
+            preparedStatement.setInt(1, id);
+            int filasEliminadas = preparedStatement.executeUpdate();
+
+            if (filasEliminadas == 1) {
+                LOGGER.info("Paciente con ID " + id + " eliminado exitosamente.");
+            } else {
+                LOGGER.error("No se encontró ningún paciente con ID " + id + " para eliminar.");
+            }
+
+            connection.commit();
+            connection.setAutoCommit(true);
+        } catch (Exception e) {
+            if (connection != null) {
+                try {
+                    connection.rollback();
+                } catch (SQLException ex) {
+                    LOGGER.error("Error al hacer rollback: " + ex.getMessage());
+                }
+            }
+            LOGGER.error("Error al eliminar paciente con ID " + id + ": " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                LOGGER.error("Error al cerrar la conexión: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+    }
 }

@@ -4,12 +4,14 @@ import java.time.LocalDate;
 
 public class Paciente {
     private Integer id;
-
     private String apellido;
     private String nombre;
     private String dni;
     private LocalDate fechaIngreso;
     private Domicilio domicilio;
+
+    public Paciente() {
+    }
 
     public Paciente(String apellido, String nombre, String dni, LocalDate fechaIngreso, Domicilio domicilio) {
         this.apellido = apellido;

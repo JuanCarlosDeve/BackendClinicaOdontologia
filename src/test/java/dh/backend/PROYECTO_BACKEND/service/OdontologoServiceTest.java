@@ -11,7 +11,22 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class OdontologoServiceTest {
-    private static IOdontologoService odontologoService = new IOdontologoService(new OdontologoEnMemoria());
+    private static IOdontologoService odontologoService = new IOdontologoService(new OdontologoEnMemoria()) {
+        @Override
+        public Odontologo agregarOdontologo(Odontologo odontologo) {
+            return null;
+        }
+
+        @Override
+        public Odontologo buscarUnOdontologo(int id) {
+            return null;
+        }
+
+        @Override
+        public List<Odontologo> buscarTodosOdontologos() {
+            return List.of();
+        }
+    };
 
     @Test
     @DisplayName("Debería guardar odontologos")
