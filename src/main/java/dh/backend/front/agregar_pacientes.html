@@ -86,20 +86,24 @@
         </div>
       </div>
     </nav>
-    <div class="container-xl">
-      <h1 class="mt-5">Odontologos</h1>
-      <table class="table table-striped-columns" id="odontologosTable">
-        <thead>
-          <tr>
-            <th>Orden</th>
-            <th>Nombre</th>
-            <th>Apellido</th>
-            <th>Matricula</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
+    <div class="container">
+      <h1 class="mt-5">Agregar Paciente</h1>
+      <form id="agregarForm">
+        <div class="mb-3">
+          <label for="nombre" class="form-label">Nombre</label>
+          <input type="text" class="form-control" id="nombre" required />
+        </div>
+        <div class="mb-3">
+          <label for="apellido" class="form-label">Apellido</label>
+          <input type="text" class="form-control" id="apellido" required />
+        </div>
+        <div class="mb-3">
+          <label for="matricula" class="form-label">Matrícula</label>
+          <input type="text" class="form-control" id="matricula" required />
+        </div>
+        <button type="submit" class="btn btn-primary">Agregar</button>
+      </form>
     </div>
-    <script src="/js/listar_odontologos.js"></script>
+    <script src="/js/agregar_pacientes.js"></script>
   </body>
 </html>
