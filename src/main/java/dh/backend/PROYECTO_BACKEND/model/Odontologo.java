@@ -2,21 +2,26 @@ package dh.backend.PROYECTO_BACKEND.model;
 
 public class Odontologo {
     private Integer id;
-    private int numMatricula;
+    private String nroMatricula;
     private String nombre;
-    private String Apellido;
+    private String apellido;
 
-    public Odontologo(Integer id, int numMatricula, String nombre, String apellido) {
+    public Odontologo() {
+    }
+
+    public Odontologo(String nroMatricula, String nombre, String apellido) {
+        this.nroMatricula = nroMatricula;
+        this.nombre = nombre;
+        this.apellido = apellido;
+    }
+
+    public Odontologo(int id, String nroMatricula, String nombre, String apellido) {
         this.id = id;
-        this.numMatricula = numMatricula;
+        this.nroMatricula = nroMatricula;
         this.nombre = nombre;
-        Apellido = apellido;
+        this.apellido = apellido;
     }
-    public Odontologo( int numMatricula, String nombre, String apellido) {
-        this.numMatricula = numMatricula;
-        this.nombre = nombre;
-        Apellido = apellido;
-    }
+
     public Integer getId() {
         return id;
     }
@@ -25,12 +30,12 @@ public class Odontologo {
         this.id = id;
     }
 
-    public int getNumMatricula() {
-        return numMatricula;
+    public String getNroMatricula() {
+        return nroMatricula;
     }
 
-    public void setNumMatricula(int numMatricula) {
-        this.numMatricula = numMatricula;
+    public void setNroMatricula(String nroMatricula) {
+        this.nroMatricula = nroMatricula;
     }
 
     public String getNombre() {
@@ -42,19 +47,20 @@ public class Odontologo {
     }
 
     public String getApellido() {
-        return Apellido;
+        return apellido;
     }
 
     public void setApellido(String apellido) {
-        Apellido = apellido;
-  } @Override
+        this.apellido = apellido;
+    }
+
+    @Override
     public String toString() {
-        return "Odontologo{" +
-                "id=" + id + // Añadido id al toString
-                ", numMatricula=" + numMatricula +
+        return "Odontologo : " +
+                "id=" + id +
+                ", nroMatricula='" + nroMatricula + '\'' +
                 ", nombre='" + nombre + '\'' +
-                ", apellido='" + Apellido + '\'' +
-                '}';
+                ", apellido='" + apellido;
     }
 }
 

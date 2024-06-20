@@ -1,8 +1,9 @@
 package dh.backend.PROYECTO_BACKEND.controller;
 
 import dh.backend.PROYECTO_BACKEND.model.Paciente;
-import dh.backend.PROYECTO_BACKEND.service.impl.IPacienteService;
-import org.springframework.beans.factory.annotation.Autowired;
+import dh.backend.PROYECTO_BACKEND.service.IPacienteService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -10,39 +11,46 @@ import java.util.List;
 @RestController
 @RequestMapping("/paciente")
 public class PacienteController {
+    public IPacienteService pacienteService;
 
-    private final IPacienteService pacienteService;
-
-    @Autowired
     public PacienteController(IPacienteService pacienteService) {
         this.pacienteService = pacienteService;
     }
 
     @PostMapping
-    public Paciente registrarPaciente(@RequestBody Paciente paciente){
-        return pacienteService.registrarPaciente(paciente);
+    public ResponseEntity<Paciente>  registrarPaciente(@RequestBody Paciente paciente){
+        Paciente pacienteARetornar = pacienteService.registrarPaciente(paciente);
+        if(pacienteARetornar==null){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        } else {
+            return ResponseEntity.status(HttpStatus.CREATED).body(pacienteARetornar);
+        }
     }
 
     @GetMapping
-    public List<Paciente> buscarTodos(){
-        return pacienteService.buscarTodos();
+    public ResponseEntity<List<Paciente>>  buscarTodos(){
+        return ResponseEntity.ok(pacienteService.buscarTodos());
     }
 
     @GetMapping("/{id}")
-    public Paciente buscarPacientePorId(@PathVariable Integer id){
-        return pacienteService.buscarPorId(id);
+    public ResponseEntity<Paciente> buscarPacientePorId(@PathVariable Integer id){
+        Paciente paciente = pacienteService.buscarPorId(id);
+        if(paciente != null){
+            return ResponseEntity.ok(paciente);
+        }else{
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
-    @PutMapping("/{id}")
-    public String actualizarPaciente(@PathVariable Integer id, @RequestBody Paciente paciente){
-        paciente.setId(id);
+    @PutMapping
+    public ResponseEntity<String>  actualizarPaciente(@RequestBody Paciente paciente){
         pacienteService.actualizarPaciente(paciente);
-        return "Paciente actualizado correctamente";
+        return  ResponseEntity.ok("paciente actualizado");
     }
 
     @DeleteMapping("/{id}")
-    public String borrarPaciente(@PathVariable Integer id){
+    public ResponseEntity<String>  borrarPaciente(@PathVariable Integer id) {
         pacienteService.eliminarPaciente(id);
-        return "Paciente eliminado correctamente";
+        return ResponseEntity.ok("paciente eliminado");
     }
 }

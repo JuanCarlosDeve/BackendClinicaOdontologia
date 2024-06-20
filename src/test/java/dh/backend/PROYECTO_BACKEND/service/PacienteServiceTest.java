@@ -4,6 +4,7 @@ package dh.backend.PROYECTO_BACKEND.service;
 import dh.backend.PROYECTO_BACKEND.dao.impl.PacienteDaoH2;
 import dh.backend.PROYECTO_BACKEND.model.Domicilio;
 import dh.backend.PROYECTO_BACKEND.model.Paciente;
+import dh.backend.PROYECTO_BACKEND.service.impl.PacienteService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

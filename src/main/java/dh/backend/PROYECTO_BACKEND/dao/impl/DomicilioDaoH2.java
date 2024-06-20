@@ -1,6 +1,6 @@
 package dh.backend.PROYECTO_BACKEND.dao.impl;
 
-import dh.backend.PROYECTO_BACKEND.dao.IDaoPaciente;
+import dh.backend.PROYECTO_BACKEND.dao.IDao;
 import dh.backend.PROYECTO_BACKEND.db.H2Connection;
 import dh.backend.PROYECTO_BACKEND.model.Domicilio;
 import org.slf4j.Logger;
@@ -10,7 +10,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DomicilioDaoH2 implements IDaoPaciente<Domicilio> {
+public class DomicilioDaoH2 implements IDao<Domicilio> {
     private static Logger LOGGER = LoggerFactory.getLogger(DomicilioDaoH2.class);
     private static final String SQL_INSERT = "INSERT INTO DOMICILIOS VALUES (DEFAULT,?,?,?,?)";
     private static final String SQL_SELECT_ID = "SELECT * FROM DOMICILIOS WHERE ID = ?";

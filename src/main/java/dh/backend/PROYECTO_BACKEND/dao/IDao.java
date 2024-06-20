@@ -1,8 +1,10 @@
 package dh.backend.PROYECTO_BACKEND.dao;
 import java.util.List;
 
-public interface IDao<T> {
-    T guardar(T t);
-    List<T> listar();
-
+public interface IDao <T>{
+    T registrar (T t);
+    T buscarPorId(Integer id);
+    List<T> buscarTodos();
+    void actualizar(T t);
+    void eliminar(Integer id);
 }

@@ -3,11 +3,9 @@ package dh.backend.PROYECTO_BACKEND.controller;
 import dh.backend.PROYECTO_BACKEND.model.Odontologo;
 import dh.backend.PROYECTO_BACKEND.model.Paciente;
 import dh.backend.PROYECTO_BACKEND.service.IOdontologoService;
-import dh.backend.PROYECTO_BACKEND.service.impl.IPacienteService;
-import org.springframework.stereotype.Controller;
+import dh.backend.PROYECTO_BACKEND.service.IPacienteService;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 public class VistaController {

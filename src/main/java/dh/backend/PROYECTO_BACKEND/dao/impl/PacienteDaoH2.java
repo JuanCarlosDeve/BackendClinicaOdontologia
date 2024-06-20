@@ -2,7 +2,7 @@ package dh.backend.PROYECTO_BACKEND.dao.impl;
 
 
 
-import dh.backend.PROYECTO_BACKEND.dao.IDaoPaciente;
+import dh.backend.PROYECTO_BACKEND.dao.IDao;
 import dh.backend.PROYECTO_BACKEND.db.H2Connection;
 import dh.backend.PROYECTO_BACKEND.model.Domicilio;
 import dh.backend.PROYECTO_BACKEND.model.Paciente;
@@ -15,11 +15,13 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 @Component
-public class PacienteDaoH2 implements IDaoPaciente<Paciente> {
+public class PacienteDaoH2 implements IDao<Paciente> {
     private  static Logger LOGGER = LoggerFactory.getLogger(PacienteDaoH2.class);
     private static String SQL_INSERT = "INSERT INTO PACIENTES VALUES (DEFAULT,?,?,?,?,?)";
     private  static  String SQL_SELECT_ID = "SELECT * FROM PACIENTES WHERE ID=?";
     private  static  String SQL_SELECT_ALL = "SELECT * FROM PACIENTES";
+    private static String SQL_UPDATE = "UPDATE PACIENTES SET APELLIDO=?, NOMBRE=?, DNI=?, FECHA_INGRESO=?, ID_DOMICILIO=? WHERE ID=?";
+    private static String SQL_DELETE = "DELETE FROM PACIENTES WHERE ID=?";
     @Override
     public Paciente registrar(Paciente paciente) {
         Connection connection = null;
@@ -156,23 +158,13 @@ public class PacienteDaoH2 implements IDaoPaciente<Paciente> {
     @Override
     public void actualizar(Paciente paciente) {
         Connection connection = null;
-        try {
+        DomicilioDaoH2 domicilioDaoH2 = new DomicilioDaoH2();
+        try{
             connection = H2Connection.getConnection();
             connection.setAutoCommit(false);
 
-            // Primero actualizamos el domicilio del paciente si es necesario
-            Domicilio domicilioPaciente = paciente.getDomicilio();
-            if (domicilioPaciente.getId() == null) {
-                // Si el domicilio no tiene ID (es nuevo), lo registramos primero
-                Domicilio domicilioGuardado = new DomicilioDaoH2().registrar(domicilioPaciente);
-                domicilioPaciente.setId(domicilioGuardado.getId());
-            } else {
-                // Si el domicilio ya tiene ID, lo actualizamos si es necesario
-                new DomicilioDaoH2().actualizar(domicilioPaciente);
-            }
+            domicilioDaoH2.actualizar(paciente.getDomicilio());
 
-            // Luego actualizamos los datos del paciente en la tabla PACIENTES
-            String SQL_UPDATE = "UPDATE PACIENTES SET APELLIDO=?, NOMBRE=?, DNI=?, FECHA_INGRESO=?, DOMICILIO_ID=? WHERE ID=?";
             PreparedStatement preparedStatement = connection.prepareStatement(SQL_UPDATE);
             preparedStatement.setString(1, paciente.getApellido());
             preparedStatement.setString(2, paciente.getNombre());
@@ -180,75 +172,66 @@ public class PacienteDaoH2 implements IDaoPaciente<Paciente> {
             preparedStatement.setDate(4, Date.valueOf(paciente.getFechaIngreso()));
             preparedStatement.setInt(5, paciente.getDomicilio().getId());
             preparedStatement.setInt(6, paciente.getId());
-            int filasActualizadas = preparedStatement.executeUpdate();
+            preparedStatement.executeUpdate();
 
-            if (filasActualizadas == 1) {
-                LOGGER.info("Paciente actualizado: " + paciente);
-            } else {
-                LOGGER.error("No se pudo actualizar el paciente con ID: " + paciente.getId());
-            }
+            LOGGER.info("paciente actualizado ");
 
             connection.commit();
             connection.setAutoCommit(true);
-        } catch (Exception e) {
-            if (connection != null) {
+        }catch (Exception e){
+            if(connection!=null){
                 try {
                     connection.rollback();
                 } catch (SQLException ex) {
-                    LOGGER.error("Error al hacer rollback: " + ex.getMessage());
+                    LOGGER.info(ex.getMessage());
+                    ex.printStackTrace();
                 }
             }
-            LOGGER.error("Error al actualizar paciente: " + e.getMessage());
+            LOGGER.info(e.getMessage());
             e.printStackTrace();
-        } finally {
+        }finally {
             try {
-                if (connection != null) {
-                    connection.close();
-                }
+                connection.close();
             } catch (SQLException e) {
-                LOGGER.error("Error al cerrar la conexión: " + e.getMessage());
+                LOGGER.info(e.getMessage());
                 e.printStackTrace();
             }
         }
     }
 
+
     @Override
     public void eliminar(Integer id) {
         Connection connection = null;
-        try {
+        DomicilioDaoH2 domicilioDaoH2 = new DomicilioDaoH2();
+        try{
             connection = H2Connection.getConnection();
             connection.setAutoCommit(false);
 
-            String SQL_DELETE = "DELETE FROM PACIENTES WHERE ID=?";
             PreparedStatement preparedStatement = connection.prepareStatement(SQL_DELETE);
             preparedStatement.setInt(1, id);
-            int filasEliminadas = preparedStatement.executeUpdate();
+            preparedStatement.executeUpdate();
 
-            if (filasEliminadas == 1) {
-                LOGGER.info("Paciente con ID " + id + " eliminado exitosamente.");
-            } else {
-                LOGGER.error("No se encontró ningún paciente con ID " + id + " para eliminar.");
-            }
+            LOGGER.info("paciente eliminado ");
 
             connection.commit();
             connection.setAutoCommit(true);
-        } catch (Exception e) {
-            if (connection != null) {
+        }catch (Exception e){
+            if(connection!=null){
                 try {
                     connection.rollback();
                 } catch (SQLException ex) {
-                    LOGGER.error("Error al hacer rollback: " + ex.getMessage());
+                    LOGGER.info(ex.getMessage());
+                    ex.printStackTrace();
                 }
             }
-            LOGGER.error("Error al eliminar paciente con ID " + id + ": " + e.getMessage());
+            LOGGER.info(e.getMessage());
             e.printStackTrace();
-        } finally {
+        }finally {
             try {
-                if (connection != null) {
-                    connection.close();
-                }
+                connection.close();
             } catch (SQLException e) {
-                LOGGER.error("Error al cerrar la conexión: " + e.getMessage());
+                LOGGER.info(e.getMessage());
                 e.printStackTrace();
             }
         }

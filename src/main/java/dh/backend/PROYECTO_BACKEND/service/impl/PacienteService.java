@@ -1,17 +1,18 @@
-package dh.backend.PROYECTO_BACKEND.service;
+package dh.backend.PROYECTO_BACKEND.service.impl;
 
-import dh.backend.PROYECTO_BACKEND.dao.IDaoPaciente;
+
+import dh.backend.PROYECTO_BACKEND.dao.IDao;
 import dh.backend.PROYECTO_BACKEND.model.Paciente;
-import dh.backend.PROYECTO_BACKEND.service.impl.IPacienteService;
+import dh.backend.PROYECTO_BACKEND.service.IPacienteService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class PacienteService implements IPacienteService {
-    private final IDaoPaciente<Paciente> pacienteIDaoPaciente;
+    private final IDao<Paciente> pacienteIDaoPaciente;
 
-    public PacienteService(IDaoPaciente<Paciente> pacienteIDaoPaciente) {
+    public PacienteService(IDao<Paciente> pacienteIDaoPaciente) {
         this.pacienteIDaoPaciente = pacienteIDaoPaciente;
     }
 
@@ -37,6 +38,7 @@ public class PacienteService implements IPacienteService {
 
     @Override
     public void eliminarPaciente(Integer id) {
+
         pacienteIDaoPaciente.eliminar(id);
     }
 }
