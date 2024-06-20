@@ -27,10 +27,20 @@ public class OdontologoService implements IOdontologoService {
         return odontologoIDao.registrar(odontologo);
     }
 
-    public Odontologo buscarUnOdontologo(int id){
+    public Odontologo buscarUnOdontologo(Integer id){
         return odontologoIDao.buscarPorId(id);
     }
     public List<Odontologo> buscarTodosOdontologos(){
         return odontologoIDao.buscarTodos();
+    }
+
+    @Override
+    public void modificarOdontologo(Odontologo odontologo) {
+        odontologoIDao.actualizar(odontologo);
+    }
+
+    @Override
+    public void eliminarOdontologo(Integer id) {
+        odontologoIDao.eliminar(id);
     }
 }
