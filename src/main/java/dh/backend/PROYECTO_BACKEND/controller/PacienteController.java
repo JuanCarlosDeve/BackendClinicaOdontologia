@@ -1,12 +1,13 @@
 package dh.backend.PROYECTO_BACKEND.controller;
 
-import dh.backend.PROYECTO_BACKEND.model.Paciente;
+import dh.backend.PROYECTO_BACKEND.entity.Paciente;
 import dh.backend.PROYECTO_BACKEND.service.IPacienteService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/paciente")
@@ -34,9 +35,9 @@ public class PacienteController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Paciente> buscarPacientePorId(@PathVariable Integer id){
-        Paciente paciente = pacienteService.buscarPorId(id);
-        if(paciente != null){
-            return ResponseEntity.ok(paciente);
+        Optional<Paciente> paciente = pacienteService.buscarPorId(id);
+        if(paciente.isPresent()){
+            return ResponseEntity.ok(paciente.get());
         }else{
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
@@ -53,4 +54,5 @@ public class PacienteController {
         pacienteService.eliminarPaciente(id);
         return ResponseEntity.ok("paciente eliminado");
     }
+
 }

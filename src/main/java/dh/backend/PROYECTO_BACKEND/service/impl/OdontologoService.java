@@ -1,46 +1,52 @@
 package dh.backend.PROYECTO_BACKEND.service.impl;
 
-import dh.backend.PROYECTO_BACKEND.dao.IDao;
-import dh.backend.PROYECTO_BACKEND.model.Odontologo;
+
+import dh.backend.PROYECTO_BACKEND.entity.Odontologo;
 import dh.backend.PROYECTO_BACKEND.service.IOdontologoService;
+import dh.backend.PROYECTO_BACKEND.repository.IOdontologoRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+
 
 @Service
 public class OdontologoService implements IOdontologoService {
-    private IDao<Odontologo> odontologoIDao;
 
-    public OdontologoService(IDao<Odontologo> odontologoIDao) {
-        this.odontologoIDao = odontologoIDao;
-    }
+    private IOdontologoRepository odontologoRepository;
 
-    public IDao<Odontologo> getOdontologoIDao() {
-        return odontologoIDao;
-    }
-
-    public void setOdontologoIDao(IDao<Odontologo> odontologoIDao) {
-        this.odontologoIDao = odontologoIDao;
+    public OdontologoService(IOdontologoRepository odontologoRepository) {
+        this.odontologoRepository = odontologoRepository;
     }
 
     public Odontologo agregarOdontologo(Odontologo odontologo){
-        return odontologoIDao.registrar(odontologo);
+        return odontologoRepository.save(odontologo);
     }
 
-    public Odontologo buscarUnOdontologo(Integer id){
-        return odontologoIDao.buscarPorId(id);
+    public Optional<Odontologo> buscarUnOdontologo(Integer id){
+        return odontologoRepository.findById(id);
     }
     public List<Odontologo> buscarTodosOdontologos(){
-        return odontologoIDao.buscarTodos();
+        return odontologoRepository.findAll();
     }
 
     @Override
     public void modificarOdontologo(Odontologo odontologo) {
-        odontologoIDao.actualizar(odontologo);
+        odontologoRepository.save(odontologo);
     }
 
     @Override
     public void eliminarOdontologo(Integer id) {
-        odontologoIDao.eliminar(id);
+        odontologoRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Odontologo> buscarPorApellido(String apellido) {
+        return odontologoRepository.buscarPorApellido(apellido);
+    }
+
+    @Override
+    public List<Odontologo> buscarPorNombre(String nombre) {
+        return odontologoRepository.findByNombreLike(nombre);
     }
 }
