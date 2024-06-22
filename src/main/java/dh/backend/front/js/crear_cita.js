@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const odontologoSelect = document.getElementById("odontologoSelect");
     const crearCitaForm = document.getElementById("crearCitaForm");
 
-    // Función para cargar y mostrar pacientes en el select
+ 
     function cargarPacientes() {
         fetch(`${apiURL}/paciente`)
             .then(response => response.json())
@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
             .catch(error => console.error("Error al cargar pacientes:", error));
     }
 
-    // Función para cargar y mostrar odontólogos en el select
+  
     function cargarOdontologos() {
         fetch(`${apiURL}/odontologo`)
             .then(response => response.json())
@@ -35,11 +35,11 @@ document.addEventListener("DOMContentLoaded", function () {
             .catch(error => console.error("Error al cargar odontólogos:", error));
     }
 
-    // Cargar pacientes y odontólogos al inicio
+   
     cargarPacientes();
     cargarOdontologos();
 
-    // Manejar el envío del formulario de creación de cita
+
     crearCitaForm.addEventListener("submit", function (event) {
         event.preventDefault();
 
@@ -69,35 +69,11 @@ document.addEventListener("DOMContentLoaded", function () {
         .then(data => {
             alert("Cita creada con éxito");
             crearCitaForm.reset();
-            mostrarCitaCreada(data);
+        
         })
         .catch(error => console.error("Error al crear la cita:", error));
     });
 
-    // Función para mostrar la cita recién creada
-    function mostrarCitaCreada(cita) {
-        const citaCreadaDiv = document.getElementById("citaCreada");
-        const citaPaciente = document.getElementById("citaPaciente");
-        const citaOdontologo = document.getElementById("citaOdontologo");
-        const citaFecha = document.getElementById("citaFecha");
-
-        // Asumiendo que `cita` contiene los datos del paciente y odontólogo en el formato correcto
-        fetch(`${apiURL}/paciente/${cita.pacienteId}`)
-            .then(response => response.json())
-            .then(paciente => {
-                citaPaciente.textContent = `${paciente.nombre} ${paciente.apellido}`;
-            })
-            .catch(error => console.error("Error al obtener datos del paciente:", error));
-
-        fetch(`${apiURL}/odontologo/${cita.odontologoId}`)
-            .then(response => response.json())
-            .then(odontologo => {
-                citaOdontologo.textContent = `${odontologo.nombre} ${odontologo.apellido}`;
-            })
-            .catch(error => console.error("Error al obtener datos del odontólogo:", error));
-
-        citaFecha.textContent = cita.fecha;
-
-        citaCreadaDiv.style.display = "block";
-    }
+    
+    
 });
