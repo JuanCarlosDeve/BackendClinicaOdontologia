@@ -3,7 +3,7 @@ const apiURL = "http://localhost:8080";
 document.addEventListener("DOMContentLoaded", function () {
     const tableBody = document.getElementById("pacientesTableBody");
 
-    // Función para cargar y mostrar los pacientes
+
     function cargarPacientes() {
         fetch(`${apiURL}/paciente`)
             .then(response => response.json())
@@ -39,18 +39,18 @@ document.addEventListener("DOMContentLoaded", function () {
             .catch(error => console.error("Error al listar pacientes:", error));
     }
 
-    // Cargar pacientes al inicio
+
     cargarPacientes();
 
-    // Función para mostrar el formulario de modificación
+
     function mostrarFormularioModificar(event) {
         const pacienteId = event.target.getAttribute("data-paciente-id");
 
-        // Obtener datos del paciente por ID
+
         fetch(`${apiURL}/paciente/${pacienteId}`)
             .then(response => response.json())
             .then(data => {
-                // Llenar el formulario con los datos del paciente
+
                 document.getElementById("pacienteId").value = pacienteId;
                 document.getElementById("apellidoModificar").value = data.apellido;
                 document.getElementById("nombreModificar").value = data.nombre;
@@ -61,14 +61,14 @@ document.addEventListener("DOMContentLoaded", function () {
                 document.getElementById("localidadModificar").value = data.domicilio.localidad;
                 document.getElementById("provinciaModificar").value = data.domicilio.provincia;
 
-                // Mostrar el modal de modificación
+
                 const modal = new bootstrap.Modal(document.getElementById('modalModificarPaciente'));
                 modal.show();
             })
             .catch(error => console.error("Error al obtener datos del paciente:", error));
     }
 
-    // Función para enviar la solicitud de borrado de paciente
+
     function borrarPaciente(event) {
         const pacienteId = event.target.getAttribute("data-paciente-id");
 
@@ -76,18 +76,18 @@ document.addEventListener("DOMContentLoaded", function () {
             fetch(`${apiURL}/paciente/${pacienteId}`, {
                 method: 'DELETE'
             })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Error al borrar el paciente');
-                }
-                // Actualizar la lista de pacientes después de borrar
-                cargarPacientes();
-            })
-            .catch(error => console.error("Error al borrar paciente:", error));
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error al borrar el paciente');
+                    }
+                    // Actualizar la lista de pacientes después de borrar
+                    cargarPacientes();
+                })
+                .catch(error => console.error("Error al borrar paciente:", error));
         }
     }
 
-    // Manejar el envío del formulario de modificación
+
     const formularioModificarPaciente = document.getElementById("formularioModificarPaciente");
     formularioModificarPaciente.addEventListener("submit", function (event) {
         event.preventDefault();
@@ -122,16 +122,16 @@ document.addEventListener("DOMContentLoaded", function () {
             },
             body: JSON.stringify(datosPaciente),
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Error al modificar el paciente');
-            }
-        
-            cargarPacientes();
-            
-            const modal = new bootstrap.Modal(document.getElementById('modalModificarPaciente'));
-            modal.hide();
-        })
-        .catch(error => console.error("Error al modificar paciente:", error));
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error al modificar el paciente');
+                }
+
+                cargarPacientes();
+
+                const modal = new bootstrap.Modal(document.getElementById('modalModificarPaciente'));
+                modal.hide();
+            })
+            .catch(error => console.error("Error al modificar paciente:", error));
     });
 });
